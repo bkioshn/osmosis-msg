@@ -1,4 +1,4 @@
-module txpy
+module txgo
 
 go 1.19
 
