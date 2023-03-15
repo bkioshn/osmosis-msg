@@ -7,6 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
@@ -32,9 +33,7 @@ func main() {
 }
 
 func sendTx() {
-	APP_NAME := os.Getenv("APP_NAME")
-	BACKEND := os.Getenv("BACKEND")
-	DIR := os.Getenv("DIR")
+	MNEMONIC := os.Getenv("MNEMONIC")
 	RPC_PATH := os.Getenv("RPC_PATH")
 	CHAIN_ID := os.Getenv("CHAIN_ID")
 	GAS := os.Getenv("GAS")
@@ -46,15 +45,14 @@ func sendTx() {
 	}
 
 	// Setup keyring
-	kr, err := keyring.New(APP_NAME, BACKEND, DIR, nil)
+	kb := keyring.NewInMemory()
+	path := sdk.GetConfig().GetFullBIP44Path()
+	key, err := kb.NewAccount("alice", MNEMONIC, "", path, hd.Secp256k1)
 	if err != nil {
 		panic(err)
 	}
-	keys, err := kr.List()
-	if err != nil {
-		panic(err)
-	}
-	key := keys[0]
+
+	println("Account:", key.GetAddress().String())
 
 	// Create client
 	clientNode, err := client.NewClientFromNode(RPC_PATH)
@@ -67,7 +65,7 @@ func sendTx() {
 		NodeURI:           RPC_PATH,
 		InterfaceRegistry: app.MakeEncodingConfig().InterfaceRegistry,
 		TxConfig:          app.MakeEncodingConfig().TxConfig,
-		Keyring:           kr,
+		Keyring:           kb,
 	}
 
 	// Retrieve account info
@@ -93,7 +91,7 @@ func sendTx() {
 
 	// Create transaction factory
 	txf := tx.Factory{}.
-		WithKeybase(kr).
+		WithKeybase(kb).
 		WithTxConfig(app.MakeEncodingConfig().TxConfig).
 		WithAccountRetriever(clientCtx.AccountRetriever).
 		WithAccountNumber(acc.GetAccountNumber()).
