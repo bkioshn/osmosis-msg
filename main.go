@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	message "txgo/messages"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -14,9 +15,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/joho/godotenv"
 	"github.com/osmosis-labs/osmosis/v15/app"
-	poolmanagertypes "github.com/osmosis-labs/osmosis/v15/x/poolmanager/types"
-
-	gammtypes "github.com/osmosis-labs/osmosis/v15/x/gamm/types"
 )
 
 func init() {
@@ -76,18 +74,7 @@ func sendTx() {
 	}
 
 	// Crafting message
-	// Example: using MsgSwapExactAmountIn from osmosis gamm
-	msgSwap := gammtypes.MsgSwapExactAmountIn{
-		Sender: acc.GetAddress().String(),
-		Routes: []poolmanagertypes.SwapAmountInRoute{
-			{
-				PoolId:        2,
-				TokenOutDenom: "uion",
-			},
-		},
-		TokenIn:           sdk.NewCoin("uosmo", sdk.NewInt(2000000)),
-		TokenOutMinAmount: sdk.NewInt(19),
-	}
+	msg := message.CraftStoreCode(acc)
 
 	// Create transaction factory
 	txf := tx.Factory{}.
@@ -102,7 +89,7 @@ func sendTx() {
 		WithFees(FEE).
 		WithSignMode(signing.SignMode_SIGN_MODE_DIRECT)
 
-	txb, err := tx.BuildUnsignedTx(txf, &msgSwap)
+	txb, err := tx.BuildUnsignedTx(txf, msg)
 	if err != nil {
 		panic(err)
 	}
