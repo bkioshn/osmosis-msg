@@ -3,7 +3,7 @@ package message
 import (
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	protorevtypes "github.com/osmosis-labs/osmosis/v15/x/protorev/types"
+	protorevtypes "github.com/osmosis-labs/osmosis/v16/x/protorev/types"
 )
 
 func CraftMsgSetHotRoutes(acc client.Account) sdk.Msg {

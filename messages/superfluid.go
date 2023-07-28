@@ -4,10 +4,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	superfluidtypes "github.com/osmosis-labs/osmosis/v15/x/superfluid/types"
+	superfluidtypes "github.com/osmosis-labs/osmosis/v16/x/superfluid/types"
 )
 
-// 1052504
 // MsgLockTokens -> MsgSuperfluidDelegate
 func CraftMsgSuperfluidDelegate(acc client.Account) sdk.Msg {
 	return &superfluidtypes.MsgSuperfluidDelegate{
@@ -55,5 +54,32 @@ func CraftMsgSuperfluidUndelegateAndUnbondLock(acc client.Account) sdk.Msg {
 		Sender: acc.GetAddress().String(),
 		LockId: 1052457,
 		Coin:   sdk.NewCoin("gamm/pool/1", sdk.NewInt(1)),
+	}
+}
+
+func CraftMsgCreateFullRangePositionAndSuperfluidDelegate(acc client.Account) sdk.Msg {
+	return &superfluidtypes.MsgCreateFullRangePositionAndSuperfluidDelegate{
+		Sender:  acc.GetAddress().String(),
+		Coins:   sdk.NewCoins(sdk.NewCoin("gamm/pool/1", sdk.NewInt(1))),
+		ValAddr: "",
+		PoolId:  1,
+	}
+}
+
+func CraftMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition(acc client.Account) sdk.Msg {
+	return &superfluidtypes.MsgUnlockAndMigrateSharesToFullRangeConcentratedPosition{
+		Sender:          acc.GetAddress().String(),
+		LockId:          1,
+		SharesToMigrate: sdk.NewCoin("gamm/pool/1", sdk.NewInt(1)),
+		TokenOutMins:    sdk.NewCoins(sdk.NewCoin("gamm/pool/1", sdk.NewInt(1))),
+	}
+}
+
+func CraftMsgAddToConcentratedLiquiditySuperfluidPosition(acc client.Account) sdk.Msg {
+	return &superfluidtypes.MsgAddToConcentratedLiquiditySuperfluidPosition{
+		Sender:        acc.GetAddress().String(),
+		PositionId:    1,
+		TokenDesired0: sdk.NewCoin("gamm/pool/1", sdk.NewInt(1)),
+		TokenDesired1: sdk.NewCoin("gamm/pool/1", sdk.NewInt(1)),
 	}
 }

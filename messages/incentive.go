@@ -5,9 +5,9 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	incentivetypes "github.com/osmosis-labs/osmosis/v15/x/incentives/types"
+	incentivetypes "github.com/osmosis-labs/osmosis/v16/x/incentives/types"
 
-	lockuptypes "github.com/osmosis-labs/osmosis/v15/x/lockup/types"
+	lockuptypes "github.com/osmosis-labs/osmosis/v16/x/lockup/types"
 )
 
 func CraftMsgCreateGauge(acc client.Account) sdk.Msg {
@@ -16,11 +16,11 @@ func CraftMsgCreateGauge(acc client.Account) sdk.Msg {
 		Owner:       acc.GetAddress().String(),
 		DistributeTo: lockuptypes.QueryCondition{
 			LockQueryType: 0,
-			Denom:         "factory/osmo1acqpnvg2t4wmqfdv8hq47d3petfksjs5r9t45p/buhbubu",
+			Denom:         "uosmo",
 			Duration:      time.Duration(8.64e+13),
 			Timestamp:     time.Now(),
 		},
-		Coins:             sdk.NewCoins(sdk.NewCoin("factory/osmo1acqpnvg2t4wmqfdv8hq47d3petfksjs5r9t45p/buhbubu", sdk.NewInt(1))),
+		Coins:             sdk.NewCoins(sdk.NewCoin("uosmo", sdk.NewInt(1))),
 		StartTime:         time.Now(),
 		NumEpochsPaidOver: 1,
 	}

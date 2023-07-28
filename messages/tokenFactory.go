@@ -5,7 +5,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	tokenfactorytypes "github.com/osmosis-labs/osmosis/v15/x/tokenfactory/types"
+	tokenfactorytypes "github.com/osmosis-labs/osmosis/v16/x/tokenfactory/types"
 )
 
 func CraftMsgCreateDenom(acc client.Account) sdk.Msg {
@@ -47,5 +47,13 @@ func CraftMsgSetDenomMetadata(acc client.Account) sdk.Msg {
 				Exponent: 0,
 				Aliases:  []string{"BUHBUBU"}}},
 		},
+	}
+}
+func CraftMsgForceTransfer(acc client.Account) sdk.Msg {
+	return &tokenfactorytypes.MsgForceTransfer{
+		Sender:              acc.GetAddress().String(),
+		Amount:              sdk.NewCoin("gamm/pool/1", sdk.NewInt(1)),
+		TransferFromAddress: "",
+		TransferToAddress:   "",
 	}
 }

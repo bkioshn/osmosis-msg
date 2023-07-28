@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	lockuptypes "github.com/osmosis-labs/osmosis/v15/x/lockup/types"
+	lockuptypes "github.com/osmosis-labs/osmosis/v16/x/lockup/types"
 )
 
 // MsgLockTokens -> MsgBeginUnlocking
@@ -42,10 +42,19 @@ func CraftMsgExtendLockup(acc client.Account) sdk.Msg {
 		Duration: time.Duration(19000000),
 	}
 }
+
 func CraftMsgForceUnlock(acc client.Account) sdk.Msg {
 	return &lockuptypes.MsgForceUnlock{
 		Owner: acc.GetAddress().String(),
 		ID:    1052490,
 		Coins: sdk.NewCoins(sdk.NewCoin("uosfmo", sdk.NewInt(1))),
+	}
+}
+
+func CraftMsgSetRewardReceiverAddress(acc client.Account) sdk.Msg {
+	return &lockuptypes.MsgSetRewardReceiverAddress{
+		Owner:          acc.GetAddress().String(),
+		LockID:         1,
+		RewardReceiver: "osmo1acqpnvg2t4wmqfdv8hq47d3petfksjs5r9t45p",
 	}
 }

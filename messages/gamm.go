@@ -4,19 +4,19 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	stablepool "github.com/osmosis-labs/osmosis/v15/x/gamm/pool-models/stableswap"
+	stablepool "github.com/osmosis-labs/osmosis/v16/x/gamm/pool-models/stableswap"
 
-	balancerpool "github.com/osmosis-labs/osmosis/v15/x/gamm/pool-models/balancer"
-	gammtypes "github.com/osmosis-labs/osmosis/v15/x/gamm/types"
-	poolmanagertypes "github.com/osmosis-labs/osmosis/v15/x/poolmanager/types"
+	balancerpool "github.com/osmosis-labs/osmosis/v16/x/gamm/pool-models/balancer"
+	gammtypes "github.com/osmosis-labs/osmosis/v16/x/gamm/types"
+	poolmanagertypes "github.com/osmosis-labs/osmosis/v16/x/poolmanager/types"
 )
 
 func CraftMsgSwapExactAmountIn(acc client.Account) sdk.Msg {
-	return &gammtypes.MsgSwapExactAmountIn{
+	return &poolmanagertypes.MsgSwapExactAmountIn{
 		Sender: acc.GetAddress().String(),
 		Routes: []poolmanagertypes.SwapAmountInRoute{
 			{
-				PoolId:        2,
+				PoolId:        1,
 				TokenOutDenom: "uion",
 			},
 		},
@@ -50,11 +50,11 @@ func CraftMsgExitPool(acc client.Account) sdk.Msg {
 	}
 }
 func CraftMsgSwapExactAmountOut(acc client.Account) sdk.Msg {
-	return &gammtypes.MsgSwapExactAmountOut{
+	return &poolmanagertypes.MsgSwapExactAmountOut{
 		Sender: acc.GetAddress().String(),
 		Routes: []poolmanagertypes.SwapAmountOutRoute{
 			{
-				PoolId:       2,
+				PoolId:       1,
 				TokenInDenom: "uosmo",
 			},
 		},
@@ -98,8 +98,11 @@ func CraftMsgExitSwapExternAmountOut(acc client.Account) sdk.Msg {
 }
 func CraftMsgCreateBalancerPool(acc client.Account) sdk.Msg {
 	return &balancerpool.MsgCreateBalancerPool{
-		Sender:     acc.GetAddress().String(),
-		PoolParams: &balancerpool.PoolParams{},
+		Sender: acc.GetAddress().String(),
+		PoolParams: &balancerpool.PoolParams{
+			SwapFee: sdk.NewDec(0),
+			ExitFee: sdk.NewDec(0),
+		},
 		PoolAssets: []balancerpool.PoolAsset{
 			{
 				Token:  sdk.NewCoin("uosmo", sdk.NewInt(1)),
@@ -109,16 +112,50 @@ func CraftMsgCreateBalancerPool(acc client.Account) sdk.Msg {
 				Token:  sdk.NewCoin("factory/osmo1acqpnvg2t4wmqfdv8hq47d3petfksjs5r9t45p/buhbubu", sdk.NewInt(1)),
 				Weight: sdk.NewInt(1),
 			},
+			// {
+			// 	Token:  sdk.NewCoin("gamm/pool/782", sdk.NewInt(1)),
+			// 	Weight: sdk.NewInt(1),
+			// },
+			// {
+			// 	Token:  sdk.NewCoin("gamm/pool/1", sdk.NewInt(1)),
+			// 	Weight: sdk.NewInt(1),
+			// },
+			// {
+			// 	Token:  sdk.NewCoin("gamm/pool/784", sdk.NewInt(1)),
+			// 	Weight: sdk.NewInt(1),
+			// },
+			// {
+			// 	Token:  sdk.NewCoin("gamm/pool/788", sdk.NewInt(1)),
+			// 	Weight: sdk.NewInt(1),
+			// },
+			// {
+			// 	Token:  sdk.NewCoin("ibc/1DC495FCEFDA068A3820F903EDBD78B942FBD204D7E93D3BA2B432E9669D1A59", sdk.NewInt(1)),
+			// 	Weight: sdk.NewInt(1),
+			// },
+			// {
+			// 	Token:  sdk.NewCoin("ibc/307E5C96C8F60D1CBEE269A9A86C0834E1DB06F2B3788AE4F716EDB97A48B97D", sdk.NewInt(1)),
+			// 	Weight: sdk.NewInt(1),
+			// },
 		},
 		FuturePoolGovernor: "",
 	}
 }
 func CrafMsgCreateStableswapPool(acc client.Account) sdk.Msg {
 	return &stablepool.MsgCreateStableswapPool{
-		Sender:                  acc.GetAddress().String(),
-		PoolParams:              &stablepool.PoolParams{},
-		InitialPoolLiquidity:    sdk.NewCoins(sdk.NewCoin("uosmo", sdk.NewInt(1)), sdk.NewCoin("uion", sdk.NewInt(1))),
-		ScalingFactors:          []uint64{1, 1},
+		Sender:     acc.GetAddress().String(),
+		PoolParams: &stablepool.PoolParams{},
+		InitialPoolLiquidity: sdk.NewCoins(sdk.NewCoin("uosmo", sdk.NewInt(1)),
+			sdk.NewCoin("uion", sdk.NewInt(1)),
+			sdk.NewCoin("ibc/307E5C96C8F60D1CBEE269A9A86C0834E1DB06F2B3788AE4F716EDB97A48B97D",
+				sdk.NewInt(1)),
+			sdk.NewCoin("ibc/1DC495FCEFDA068A3820F903EDBD78B942FBD204D7E93D3BA2B432E9669D1A59",
+				sdk.NewInt(1)),
+			sdk.NewCoin("gamm/pool/1", sdk.NewInt(1)),
+			sdk.NewCoin("gamm/pool/784", sdk.NewInt(1)),
+			sdk.NewCoin("gamm/pool/788", sdk.NewInt(1)),
+			sdk.NewCoin("factory/osmo1acqpnvg2t4wmqfdv8hq47d3petfksjs5r9t45p/buhbubu", sdk.NewInt(1)),
+		),
+		ScalingFactors:          []uint64{1, 1, 1, 1, 1, 1, 1, 1},
 		ScalingFactorController: "",
 		FuturePoolGovernor:      acc.GetAddress().String(),
 	}

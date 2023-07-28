@@ -14,7 +14,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/joho/godotenv"
-	"github.com/osmosis-labs/osmosis/v15/app"
+	"github.com/osmosis-labs/osmosis/v16/app"
 )
 
 func init() {
@@ -73,8 +73,8 @@ func sendTx() {
 		panic(err)
 	}
 
-	// Crafting message
-	msg := message.CraftStoreCode(acc)
+	// Crafting message - modify this
+	msg := message.CraftMsgSwapExactAmountIn(acc)
 
 	// Create transaction factory
 	txf := tx.Factory{}.

@@ -3,7 +3,7 @@ package message
 import (
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	valsetpreftypes "github.com/osmosis-labs/osmosis/v15/x/valset-pref/types"
+	valsetpreftypes "github.com/osmosis-labs/osmosis/v16/x/valset-pref/types"
 )
 
 func CraftMsgSetValidatorSetPreference(acc client.Account) sdk.Msg {
@@ -12,7 +12,11 @@ func CraftMsgSetValidatorSetPreference(acc client.Account) sdk.Msg {
 		Preferences: []valsetpreftypes.ValidatorPreference{
 			{
 				ValOperAddress: "osmovaloper1c584m4lq25h83yp6ag8hh4htjr92d954kphp96",
-				Weight:         sdk.NewDec(1),
+				Weight:         sdk.NewDecWithPrec(8, 1),
+			},
+			{
+				ValOperAddress: "osmovaloper14lzvt4gdwh2q4ymyjqma0p4j4aykpn92l4warr",
+				Weight:         sdk.NewDecWithPrec(2, 1),
 			},
 		},
 	}
@@ -28,7 +32,7 @@ func CraftMsgRedelegateValidatorSet(acc client.Account) sdk.Msg {
 		Delegator: acc.GetAddress().String(),
 		Preferences: []valsetpreftypes.ValidatorPreference{
 			{
-				ValOperAddress: "osmovaloper1acqpnvg2t4wmqfdv8hq47d3petfksjs5ejrkrx",
+				ValOperAddress: "osmovaloper1c584m4lq25h83yp6ag8hh4htjr92d954kphp96", //"osmovaloper1acqpnvg2t4wmqfdv8hq47d3petfksjs5ejrkrx",
 				Weight:         sdk.NewDec(1),
 			},
 		},
